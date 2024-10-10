@@ -11,7 +11,6 @@ export default function UploadImage() {
       fileName.push(URL.createObjectURL(names[i]));
     }
     setFileName(fileName);
-    console.log("fileName", fileName);
   };
 
   const handleChange = (event) => {
@@ -26,7 +25,6 @@ export default function UploadImage() {
     setFileName((previousImage) =>
       previousImage.filter((_, index) => index !== i)
     );
-    console.log("filename11", fileName);
   };
   const onDragOver = (e) => {
     e.preventDefault();
@@ -42,18 +40,19 @@ export default function UploadImage() {
   const onDrop = (e) => {
     e.preventDefault();
     setIsDragging(false);
-    console.log("dddd");
     const files = e.dataTransfer.files;
     saveFile(files);
-    console.log("files", files);
-    //setFileName(files);
+  };
+
+  const clearAllImages = () => {
+    setFileName([]);
   };
 
   return (
     <>
       <div className="w-4/5 mx-auto">
         <div
-          className="box-border p-4 border-4 h-80 content-center border-dashed"
+          className="box-border p-4 border-4 h-80 content-center border-dashed border-black"
           onDragOver={onDragOver}
           onDrop={onDrop}
           onDragLeave={onDragLeave}
@@ -76,19 +75,42 @@ export default function UploadImage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-6 gap-4 p-4 content-center">
+      <div className="grid grid-cols-7 gap-4 p-4 content-center mx-auto w-4/5">
         {fileName.length > 0 &&
           fileName.map((file, i) => {
             return (
-              <div className="box-border border-2 h-30 content-center">
-                <span className="" role="button" onClick={() => deleteImage(i)}>
+              <div
+                className="relative box-border border-2 border-black flex justify-center items-center w-32 h-32"
+                key={i}
+              >
+                <span
+                  className="absolute top-0 right-0 m-1 cursor-pointer"
+                  role="button"
+                  onClick={() => deleteImage(i)}
+                >
                   x
                 </span>
-                <img src={file} width="100" height="100" alt="img" key={i} />
+                <img
+                  src={file}
+                  className="w-full h-full object-cover"
+                  alt="img"
+                  key={i}
+                />
               </div>
             );
           })}
       </div>
+
+      {fileName.length > 0 && (
+        <div className="w-4/5 mx-auto mt-4 text-center">
+          <button
+            onClick={clearAllImages}
+            className="bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded"
+          >
+            Clear All
+          </button>
+        </div>
+      )}
     </>
   );
 }
